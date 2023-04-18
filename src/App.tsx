@@ -36,14 +36,8 @@ function App() {
     setBoard(newBoard);
 
     const status = getGameStatus(newBoard);
-    if (status === "lost") {
-      setIsFinished(true);
-
-      setTimeout(() => alert("YOU LOOSE :("), 200);
-    } else if (status === "won") {
-      setTimeout(() => alert("CONGRATS :D"), 200);
-      setIsFinished(true);
-    }
+    if (status === "won") alert("CONGRATS :D");
+    if (status === "lost") alert("YOU LOOSE :(");
   };
 
   return (
