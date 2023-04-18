@@ -1,103 +1,39 @@
-export interface Cell {
+interface Cell {
+  val: "💣" | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  revealed: boolean;
+  backgroundColor: "red" | "green" | "transparent";
   x: number;
   y: number;
-  val: number | "bomb";
-  revealed: boolean;
-  backgroundColor: string;
 }
 
-export type Board = Cell[][];
+type Board = Cell[][];
 
-export const createEmptyBoard = (size: number): Board => {
-  const cells: Board = new Array(size);
-  for (let x = 0; x < size; x++) {
-    cells[x] = new Array(size);
-    for (let y = 0; y < size; y++) {
-      cells[x][y] = {
-        x,
-        y,
-        revealed: false,
-        val: 0,
-        backgroundColor: "transparent",
-      };
-    }
-  }
-  return cells;
-};
+type GameStatus = "won" | "lost" | "inProgress";
 
-export const forEachCell = (board: Board, fn: (cell: Cell) => void) => {
-  board.flat().forEach((cell) => {
-    fn(cell);
-  });
-};
+function createEmptyBoard(size: number): Board {
+  return [];
+}
 
-export const populateWithBombs = (board: Board, bombRatio = 0.2) => {
-  const allCells = board.flat();
-  const indexes = allCells.map((_, i) => i);
-  const nbBombs = Math.round(allCells.length * bombRatio);
-  for (let i = 0; i < nbBombs; i += 1) {
-    const randomIdx = Math.floor(Math.random() * indexes.length);
-    const cellIdx = indexes[randomIdx];
-    const toUpdate = allCells[cellIdx];
-    console.log({ allCells, indexes, randomIdx, cellIdx, toUpdate });
+function populateWithBombs(board: Board, bombRatio = 0.2) {
+  return [];
+}
 
-    if (toUpdate) toUpdate.val = "bomb";
-    // removing this index since we already placed a bomb on this cell
-    indexes.splice(randomIdx, 1);
-  }
-};
+function getNeighbors(board: Board, cell: Cell): Cell[] {
+  return [];
+}
 
-export const getNeighbors = (board: Board, cell: Cell): Cell[] => {
-  const neighbors = [];
-  if (cell.y !== 0) {
-    neighbors.push(board[cell.x][cell.y - 1]);
-  }
-  if (cell.y !== 0 && cell.x !== board.length - 1) {
-    neighbors.push(board[cell.x + 1][cell.y - 1]);
-  }
-  if (cell.x !== board.length - 1) {
-    neighbors.push(board[cell.x + 1][cell.y]);
-  }
-  if (cell.x !== board.length - 1 && cell.y !== board.length - 1) {
-    neighbors.push(board[cell.x + 1][cell.y + 1]);
-  }
-  if (cell.y !== board.length - 1) {
-    neighbors.push(board[cell.x][cell.y + 1]);
-  }
-  if (cell.y !== board.length - 1 && cell.x !== 0) {
-    neighbors.push(board[cell.x - 1][cell.y + 1]);
-  }
-  if (cell.x !== 0) {
-    neighbors.push(board[cell.x - 1][cell.y]);
-  }
-  if (cell.x !== 0 && cell.y !== 0) {
-    neighbors.push(board[cell.x - 1][cell.y - 1]);
-  }
-  return neighbors;
-};
+function populateWithNeighborsCount(board: Board, bombRatio = 0.2) {
+  return [];
+}
 
-export const populateWithNeighborsCount = (board: Board) => {
-  forEachCell(board, (cell) => {
-    if (cell.val !== "bomb") {
-      cell.val = getNeighbors(board, cell).filter(
-        (cell) => cell.val === "bomb"
-      ).length;
-    }
-  });
-};
+function generateBoard(size: number, bombRatio = 0.2): Board {
+  return [];
+}
 
-export const createBoard = (size = 5, bombRatio = 0.2) => {
-  const b = createEmptyBoard(size);
-  populateWithBombs(b, bombRatio);
-  populateWithNeighborsCount(b);
-  return b;
-};
+function revealCell(cell: Cell) {}
 
-export const getGameStatus = (board: Board): "won" | "lost" | "inProgress" => {
-  const allCells = board.flat();
-  const notBombs = allCells.filter((cell) => cell.val !== "bomb");
-  const lost = allCells.some((cell) => cell.revealed && cell.val === "bomb");
-  if (lost) return "lost";
-  const won = notBombs.every((cell) => cell.revealed);
-  return won ? "won" : "inProgress";
-};
+function revealAllCell(board: Board) {}
+
+function getGameStatus(board: Board): GameStatus {
+  return "inProgress";
+}
