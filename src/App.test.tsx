@@ -1,9 +1,25 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { createEmptyBoard } from "./Board";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe("createEmptyBoard", () => {
+  it("creates an array of arrays of objects with correct values", () => {
+    const b = createEmptyBoard(2);
+    expect(b.length).toBe(2);
+    expect(b[0].length).toBe(2);
+    expect(b[1].length).toBe(2);
+    const commonProps = {
+      val: 0,
+      backgroundColor: "transparent",
+      revealed: false,
+    };
+    expect(b).toEqual([
+      [
+        { ...commonProps, x: 0, y: 0 },
+        { ...commonProps, x: 1, y: 0 },
+      ],
+      [
+        { ...commonProps, x: 0, y: 1 },
+        { ...commonProps, x: 1, y: 1 },
+      ],
+    ]);
+  });
 });
