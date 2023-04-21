@@ -29,7 +29,36 @@ export function createEmptyBoard(size: number): Board {
   return b;
 }
 
-function populateWithBombs(board: Board, bombRatio = 0.2) {}
+export const populateWithBombs = (board: Board, bombRatio = 0.2) => {
+  const allCells = board.flat();
+  const nbBombs = bombRatio * allCells.length;
+  const indexes: number[] = [];
+  while (indexes.length < nbBombs) {
+    const randomIdx = Math.floor(Math.random() * allCells.length);
+    if (!indexes.includes(randomIdx)) {
+      allCells[randomIdx].val = "💣";
+      indexes.push(randomIdx);
+    }
+  }
+
+  /*
+  const allCells = board.flat();
+  const nbBombs = bombRatio * allCells.length;
+  const indexes: number[] = allCells.map((_, i) => i);
+  for (let i = 0; i < nbBombs; i += 1) {
+    const randomIdx = Math.floor(Math.random() * indexes.length);
+    const cellIdx = indexes[randomIdx];
+    allCells[cellIdx].val = "💣";
+    indexes.splice(randomIdx, 1);
+  }
+  */
+
+  /*
+  board.flat().forEach((cell) => {
+    if (Math.random() < bombRatio) cell.val = "💣";
+  });
+  */
+};
 
 function getNeighbors(board: Board, cell: Cell): Cell[] {
   return [];
