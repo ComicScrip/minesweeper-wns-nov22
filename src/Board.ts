@@ -1,7 +1,11 @@
+export type nbNeighbors = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+export type bomb = "💣";
+export type backgroundColor = "red" | "green" | "transparent";
+
 interface Cell {
-  val: "💣" | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  val: bomb | nbNeighbors;
   revealed: boolean;
-  backgroundColor: "red" | "green" | "transparent";
+  backgroundColor: backgroundColor;
   x: number;
   y: number;
 }
@@ -60,17 +64,22 @@ export const populateWithBombs = (board: Board, bombRatio = 0.2) => {
   */
 };
 
-function getNeighbors(board: Board, cell: Cell): Cell[] {
-  return [];
+export function getNeighbors(board: Board, cell: Cell): Cell[] {
+  const res: Cell[] = [];
+
+  // TODO
+
+  return res;
 }
 
-function populateWithNeighborsCount(board: Board, bombRatio = 0.2) {
-  return [];
+export function populateWithBombsCount(board: Board) {
+  // TODO
 }
 
 export function generateBoard(size: number, bombRatio = 0.2): Board {
   const b = createEmptyBoard(size);
   populateWithBombs(b, bombRatio);
+  populateWithBombsCount(b);
   return b;
 }
 

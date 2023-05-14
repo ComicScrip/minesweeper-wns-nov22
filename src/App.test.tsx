@@ -1,4 +1,11 @@
-import { createEmptyBoard } from "./Board";
+import {
+  backgroundColor,
+  bomb,
+  createEmptyBoard,
+  getNeighbors,
+  nbNeighbors,
+  populateWithBombsCount,
+} from "./Board";
 
 describe("createEmptyBoard", () => {
   it("creates an array of arrays of objects with correct values", () => {
