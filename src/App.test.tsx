@@ -113,7 +113,7 @@ describe("getNeigbors", () => {
   });
 });
 
-describe("populateWithNeighborsCount", () => {
+describe("populateWithBombsCount", () => {
   it("should populate the board with the number of bombs surrounding each cell that is not a bomb itself", () => {
     const commonProps = {
       val: 0 as nbNeighbors,
