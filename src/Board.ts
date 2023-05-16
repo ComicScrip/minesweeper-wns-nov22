@@ -81,11 +81,21 @@ export function getNeighbors(board: Board, cell: Cell): Cell[] {
 }
 
 export function populateWithBombsCount(board: Board) {
-  board.flat().forEach((cell) => {
-    if (cell.val !== "💣")
+  board
+    .flat()
+    .filter((cell) => cell.val !== "💣")
+    .forEach((cell) => {
+      /*
+      const surroundingCells = getNeighbors(board, cell);
+      const surroundingBombsNumber = surroundingCells.reduce(
+        (acc, cur) => acc + (cur.val === "💣" ? 1 : 0),
+        0
+      );
+      cell.val = surroundingBombsNumber as nbNeighbors;
+      */
       cell.val = getNeighbors(board, cell).filter((cell) => cell.val === "💣")
         .length as nbNeighbors;
-  });
+    });
 }
 
 export function generateBoard(size: number, bombRatio = 0.2): Board {
