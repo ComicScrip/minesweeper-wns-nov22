@@ -4,8 +4,10 @@ import {
   createEmptyBoard,
   getNeighbors,
   nbNeighbors,
-  populateWithBombs,
   populateWithBombsCount,
+  revealCell,
+  Cell,
+  getGameStatus,
 } from "./Board";
 
 describe("createEmptyBoard", () => {
@@ -114,7 +116,7 @@ describe("getNeigbors", () => {
   });
 });
 
-describe("populateWithNeighborsCount", () => {
+describe("populateWithBombsCount", () => {
   it("should populate the board with the number of bombs surrounding each cell that is not a bomb itself", () => {
     const commonProps = {
       val: 0 as nbNeighbors,
@@ -159,5 +161,147 @@ describe("populateWithNeighborsCount", () => {
     ];
     populateWithBombsCount(board);
     expect(board).toEqual(expectedBoard);
+  });
+});
+
+describe("revealCell", () => {
+  it("should change background color and reveled status according to the cell's val", () => {
+    const cell: Cell = {
+      val: 0,
+      backgroundColor: "transparent",
+      revealed: false,
+      x: 0,
+      y: 0,
+    };
+
+    revealCell(cell);
+    expect(cell.revealed).toBe(true);
+    expect(cell.backgroundColor).toBe("green");
+
+    const bomb: Cell = {
+      val: "💣",
+      backgroundColor: "transparent",
+      revealed: false,
+      x: 0,
+      y: 0,
+    };
+
+    revealCell(bomb);
+    expect(bomb.revealed).toBe(true);
+    expect(bomb.backgroundColor).toBe("red");
+  });
+});
+
+describe("getGameStatus", () => {
+  it("should return in progress when not lost nor won", () => {
+    const commonProps = {
+      val: 0 as nbNeighbors,
+      backgroundColor: "transparent" as backgroundColor,
+      revealed: false,
+    };
+
+    const b = [
+      [
+        { ...commonProps, x: 0, y: 0, revealed: true },
+        { ...commonProps, x: 1, y: 0, revealed: true },
+        { ...commonProps, x: 2, y: 0 },
+      ],
+      [
+        { ...commonProps, x: 0, y: 1, val: "💣" as bomb },
+        { ...commonProps, x: 1, y: 1 },
+        { ...commonProps, x: 2, y: 1, revealed: true },
+      ],
+      [
+        { ...commonProps, x: 0, y: 2, val: "💣" as bomb },
+        { ...commonProps, x: 1, y: 2 },
+        { ...commonProps, x: 2, y: 2 },
+      ],
+    ];
+
+    expect(getGameStatus(b)).toBe("inProgress");
+  });
+
+  it("should return lost if one bomb has been revealed", () => {
+    const commonProps = {
+      val: 0 as nbNeighbors,
+      backgroundColor: "transparent" as backgroundColor,
+      revealed: false,
+    };
+
+    const b = [
+      [
+        { ...commonProps, x: 0, y: 0, revealed: true },
+        { ...commonProps, x: 1, y: 0, revealed: true },
+        { ...commonProps, x: 2, y: 0 },
+      ],
+      [
+        { ...commonProps, x: 0, y: 1, val: "💣" as bomb, revealed: true },
+        { ...commonProps, x: 1, y: 1 },
+        { ...commonProps, x: 2, y: 1, revealed: true },
+      ],
+      [
+        { ...commonProps, x: 0, y: 2, val: "💣" as bomb },
+        { ...commonProps, x: 1, y: 2 },
+        { ...commonProps, x: 2, y: 2 },
+      ],
+    ];
+
+    expect(getGameStatus(b)).toBe("lost");
+  });
+
+  it("should return lost if one bomb has been revealed, even if all non-bombs have been revealed", () => {
+    const commonProps = {
+      val: 0 as nbNeighbors,
+      backgroundColor: "transparent" as backgroundColor,
+      revealed: false,
+    };
+
+    const b = [
+      [
+        { ...commonProps, x: 0, y: 0, revealed: true },
+        { ...commonProps, x: 1, y: 0, revealed: true },
+        { ...commonProps, x: 2, y: 0, revealed: true },
+      ],
+      [
+        { ...commonProps, x: 0, y: 1, val: "💣" as bomb, revealed: true },
+        { ...commonProps, x: 1, y: 1, revealed: true },
+        { ...commonProps, x: 2, y: 1, revealed: true },
+      ],
+      [
+        { ...commonProps, x: 0, y: 2, val: "💣" as bomb },
+        { ...commonProps, x: 1, y: 2, revealed: true },
+        { ...commonProps, x: 2, y: 2, revealed: true },
+      ],
+    ];
+
+    expect(getGameStatus(b)).toBe("lost");
+  });
+
+  it("should return won if every cell that is not a bomb has been revealed", () => {
+    const commonProps = {
+      val: 0 as nbNeighbors,
+      backgroundColor: "transparent" as backgroundColor,
+      revealed: false,
+    };
+
+    const b = [
+      [
+        { ...commonProps, x: 0, y: 0, revealed: true },
+        { ...commonProps, x: 1, y: 0, revealed: true },
+        { ...commonProps, x: 2, y: 0, revealed: true },
+      ],
+      [
+        { ...commonProps, x: 0, y: 1, val: "💣" as bomb },
+        { ...commonProps, x: 1, y: 1, revealed: true },
+        { ...commonProps, x: 2, y: 1, revealed: true },
+      ],
+      [
+        { ...commonProps, x: 0, y: 2, val: "💣" as bomb },
+        { ...commonProps, x: 1, y: 2, revealed: true },
+        { ...commonProps, x: 2, y: 2, revealed: true },
+      ],
+    ];
+
+    expect(getGameStatus(b)).toBe("won");
   });
 });

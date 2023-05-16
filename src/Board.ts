@@ -1,8 +1,8 @@
 export type nbNeighbors = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 export type bomb = "💣";
 export type backgroundColor = "red" | "green" | "transparent";
-
-interface Cell {
+export type GameStatus = "won" | "lost" | "inProgress";
+export interface Cell {
   val: bomb | nbNeighbors;
   revealed: boolean;
   backgroundColor: backgroundColor;
@@ -10,9 +10,7 @@ interface Cell {
   y: number;
 }
 
-type Board = Cell[][];
-
-type GameStatus = "won" | "lost" | "inProgress";
+export type Board = Cell[][];
 
 export function createEmptyBoard(size: number): Board {
   const b = [];
@@ -97,10 +95,16 @@ export function generateBoard(size: number, bombRatio = 0.2): Board {
   return b;
 }
 
-function revealCell(cell: Cell) {}
+export function revealCell(cell: Cell) {
+  cell.backgroundColor = cell.val === "💣" ? "red" : "green";
+  cell.revealed = true;
+}
 
-function revealAllCell(board: Board) {}
-
-function getGameStatus(board: Board): GameStatus {
-  return "inProgress";
+export function getGameStatus(board: Board): GameStatus {
+  const allCells = board.flat();
+  const notBombs = allCells.filter((cell) => cell.val !== "💣");
+  const lost = allCells.some((cell) => cell.revealed && cell.val === "💣");
+  if (lost) return "lost";
+  const won = notBombs.every((cell) => cell.revealed);
+  return won ? "won" : "inProgress";
 }
