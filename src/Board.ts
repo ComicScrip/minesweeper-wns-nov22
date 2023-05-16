@@ -1,8 +1,8 @@
 export type nbNeighbors = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 export type bomb = "💣";
 export type backgroundColor = "red" | "green" | "transparent";
-
-interface Cell {
+export type GameStatus = "won" | "lost" | "inProgress";
+export interface Cell {
   val: bomb | nbNeighbors;
   revealed: boolean;
   backgroundColor: backgroundColor;
@@ -10,9 +10,7 @@ interface Cell {
   y: number;
 }
 
-type Board = Cell[][];
-
-type GameStatus = "won" | "lost" | "inProgress";
+export type Board = Cell[][];
 
 export function createEmptyBoard(size: number): Board {
   const b = [];
@@ -67,13 +65,27 @@ export const populateWithBombs = (board: Board, bombRatio = 0.2) => {
 export function getNeighbors(board: Board, cell: Cell): Cell[] {
   const res: Cell[] = [];
 
-  // TODO
+  if (cell.x < board.length - 1) res.push(board[cell.y][cell.x + 1]); // right
+  if (cell.x < board.length - 1 && cell.y < board.length - 1)
+    res.push(board[cell.y + 1][cell.x + 1]); // right-down
+  if (cell.y < board.length - 1) res.push(board[cell.y + 1][cell.x]); // down
+  if (cell.x > 0 && cell.y < board.length - 1)
+    res.push(board[cell.y + 1][cell.x - 1]); // left-down
+  if (cell.x > 0) res.push(board[cell.y][cell.x - 1]); // left
+  if (cell.x > 0 && cell.y > 0) res.push(board[cell.y - 1][cell.x - 1]); // left-up
+  if (cell.y > 0) res.push(board[cell.y - 1][cell.x]); // up
+  if (cell.y > 0 && cell.x < board.length - 1)
+    res.push(board[cell.y - 1][cell.x + 1]); // right up
 
   return res;
 }
 
 export function populateWithBombsCount(board: Board) {
-  // TODO
+  board.flat().forEach((cell) => {
+    if (cell.val !== "💣")
+      cell.val = getNeighbors(board, cell).filter((cell) => cell.val === "💣")
+        .length as nbNeighbors;
+  });
 }
 
 export function generateBoard(size: number, bombRatio = 0.2): Board {
@@ -83,10 +95,11 @@ export function generateBoard(size: number, bombRatio = 0.2): Board {
   return b;
 }
 
-function revealCell(cell: Cell) {}
+export function revealCell(cell: Cell) {
+  // TODO
+}
 
-function revealAllCell(board: Board) {}
-
-function getGameStatus(board: Board): GameStatus {
+export function getGameStatus(board: Board): GameStatus {
+  // TODO
   return "inProgress";
 }
