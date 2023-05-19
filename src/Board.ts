@@ -106,10 +106,17 @@ export function generateBoard(size: number, bombRatio = 0.2): Board {
 }
 
 export function revealCell(cell: Cell) {
-  // TODO
+  cell.revealed = true;
+  cell.backgroundColor = cell.val === "💣" ? "red" : "green";
 }
 
 export function getGameStatus(board: Board): GameStatus {
-  // TODO
+  const allCells = board.flat();
+  if (allCells.find((cell) => cell.val === "💣" && cell.revealed))
+    return "lost";
+  if (
+    allCells.filter((cell) => cell.val !== "💣").every((cell) => cell.revealed)
+  )
+    return "won";
   return "inProgress";
 }
