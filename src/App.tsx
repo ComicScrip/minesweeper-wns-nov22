@@ -5,17 +5,22 @@ import { produce } from "immer";
 function App() {
   const [board, setBoard] = useState(generateBoard(5));
   const [isCheating, setIsCheating] = useState(false);
+  const [gameOver, setGameOver] = useState(false);
 
   return (
     <div className="App">
       <button
         onClick={() => {
           setBoard(generateBoard(5));
+          setGameOver(false);
         }}
       >
         Reload
       </button>
-      <table>
+      <button onClick={() => setIsCheating((c) => !c)}>
+        {isCheating ? "stop cheating" : "cheat"}
+      </button>
+      <table style={{ opacity: gameOver ? 0.7 : 1 }}>
         <tbody>
           {board.map((row, idx) => {
             return (
@@ -29,18 +34,15 @@ function App() {
                         const newBoard = produce(board, (draft) => {
                           revealCell(draft[cell.y][cell.x]);
                         });
-                        console.log({ newBoard });
-
                         setBoard(newBoard);
-
                         const gameStatus = getGameStatus(newBoard);
                         if (gameStatus !== "inProgress") {
-                          alert(`you ${gameStatus}`);
-                          //revealAllCell();
+                          setGameOver(true);
+                          setTimeout(() => alert(`you ${gameStatus}`), 100);
                         }
                       }}
                     >
-                      {isCheating || cell.revealed ? cell.val : ""}
+                      {isCheating || gameOver || cell.revealed ? cell.val : ""}
                     </td>
                   );
                 })}
